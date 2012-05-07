@@ -1,0 +1,13 @@
+---
+applications:
+  .:
+    instances: 1
+    name: regexplanet
+    mem: 64M
+    framework:
+      name: node06
+      info:
+        description: Node.js Application
+        mem: 64M
+        exec:
+    url: ${name}.${target-base}
