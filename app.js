@@ -25,6 +25,7 @@ function getStatus()
 {
 	var retVal = {}
 
+	retVal["success"] = true;
 	retVal["__filename"] = __filename;
 	retVal["os.hostname"] = os.hostname();
 	retVal["os.type"] = os.type();
@@ -36,7 +37,7 @@ function getStatus()
 	retVal["os.totalmem"] = os.totalmem();
 	retVal["os.freemem"] = os.freemem();
 	retVal["os.cpus.length"] = os.cpus().length;
-	retVal["os.networkInterfaces"] = os.networkInterfaces();
+	retVal["os.networkInterfaces"] = os.networkInterfaces();*/
 	retVal["process.arch"] = process.arch;
 	retVal["process.cwd"] = process.cwd();
 	retVal["process.execPath"] = process.execPath;
@@ -45,7 +46,7 @@ function getStatus()
 	retVal["process.uptime"] = process.uptime;
 	retVal["process.version"] = process.versions;
 	retVal["process.versions"] = process.versions;
-	retVal["process.installPrefix"] = process.installPrefix;*/
+	retVal["process.installPrefix"] = process.installPrefix;
 
 	return retVal;
 }
