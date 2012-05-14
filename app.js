@@ -113,6 +113,7 @@ function serveTest(query, response)
 	{
 		response.write(JSON.stringify({"success": false, "message": "no input"}));
 		response.end();
+		return;
 	}
 
 	var retVal = {};
@@ -123,9 +124,6 @@ function serveTest(query, response)
 
 	try
 	{
-
-
-
 		var params = {};
 		var pairs = query.split("&");
 		for (var loop = 0; loop < pairs.length; loop++)
@@ -155,11 +153,13 @@ function serveTest(query, response)
 		{
 			response.write(JSON.stringify({"success": false, "message": "No regex to test!"}));
 			response.end();
+			return;
 		}
 
 		var replacement = 'replacement' in params ? params['replacement'][0] : null;
 		var str_options = "";
 		var options = 'option' in params ? params['option'] : null;
+		var global = false;
 		if (options != null && options.length > 0)
 		{
 			for (var loop = 0; loop < options.length; loop++)
@@ -168,6 +168,7 @@ function serveTest(query, response)
 
 				if (option == "global")
 				{
+					global = true;
 					str_options += "g";
 				}
 				else if (option == "multiline")
@@ -209,11 +210,11 @@ function serveTest(query, response)
 		html.push("\t</tr>\n");
 		html.push("</table>\n");
 
-		var regex = null;
+		var compileTest = null;
 
 		try
 		{
-			regex = new RegExp(str_regex, str_options);
+			compileTest = new RegExp(str_regex, str_options);
 		}
 		catch (err)
 		{
@@ -222,6 +223,7 @@ function serveTest(query, response)
 			html.push("</div>");
 			response.write(JSON.stringify({"success": true, "message": "unable to create RegExp object", "html": html.join("")}));
 			response.end();
+			return;
 		}
 
 		html.push('<table class=\"table table-bordered table-striped\">\n');
@@ -230,10 +232,11 @@ function serveTest(query, response)
 		html.push("\t\t<tr>\n");
 		html.push("\t\t\t<th style=\"text-align:center;\">Test</th>\n");
 		html.push("\t\t\t<th>Input</th>");
-		html.push("\t\t\t<th>.test()</th>");
+		html.push("\t\t\t<th>input.replace</th>");
+		html.push("\t\t\t<th>input.split</th>");
+		html.push("\t\t\t<th>regex.test()</th>");
 		html.push("\t\t\t<th>regex.exec().index</th>");
-		html.push("\t\t\t<th>regex.exec()[0]</th>");
-		html.push("\t\t\t<th>regex.exec()[1..n]</th>");
+		html.push("\t\t\t<th>regex.exec()[]</th>");
 		html.push("\t\t\t<th>regex.lastIndex</th>");
 		html.push("\t\t</tr>\n");
 		html.push("\t</thead>\n");
@@ -264,13 +267,30 @@ function serveTest(query, response)
 				html.push("</td>\n");
 
 				html.push('\t\t\t<td>');
+				html.push(h(input.replace(new RegExp(str_regex, str_options), replacement == null ? "" : replacement)));
+				html.push("</td>\n");
+
+				html.push('\t\t\t<td>');
+				var splits = input.split(new RegExp(str_regex, str_options));
+				for (var split = 0; split < splits.length; split++)
+				{
+					html.push("[");
+					html.push(split);
+					html.push("]: ");
+					html.push(splits[split] == null ? "<i>(null)</i>" : h(splits[split]));
+					html.push("<br/>");
+				}
+				html.push("</td>\n");
+
+				html.push('\t\t\t<td>');
 				html.push(new RegExp(str_regex, str_options).test(input) ? "true" : "false");	// can't use the same object twice
 				html.push("</td>\n");
 
+				var regex = new RegExp(str_regex, str_options);
 				var result = regex.exec(input);
 				if (result == null)
 				{
-					html.push('\t\t\t<td colspan="4"><i>(null)</i></td>\n');
+					html.push('\t\t\t<td colspan="6"><i>(null)</i></td>\n');
 				}
 				else
 				{
@@ -285,7 +305,7 @@ function serveTest(query, response)
 						else
 						{
 							html.push("</tr>\n");
-							html.push('\t\t\t<td colspan="3" style="text-align:right;">');
+							html.push('\t\t\t<td colspan="5" style="text-align:right;">');
 							html.push("regex.exec()");
 							html.push("</td>\n");
 						}
@@ -295,14 +315,11 @@ function serveTest(query, response)
 						html.push("</td>\n");
 
 						html.push('\t\t\t<td>');
-						html.push(result[0]);
-						html.push("</td>\n");
-
-						html.push('\t\t\t<td>');
-						for (var capture = 1; capture < result.length; capture++)
+						for (var capture = 0; capture < result.length; capture++)
 						{
+							html.push("[");
 							html.push(capture);
-							html.push(": ");
+							html.push("]: ");
 							html.push(result[capture] == null ? "<i>(null)</i>" : h(result[capture]));
 							html.push("<br/>");
 						}
@@ -312,10 +329,10 @@ function serveTest(query, response)
 						html.push(regex.lastIndex);
 						html.push("</td>\n");
 
-						result = regex.exec(input);
+						result = global ? regex.exec(input) : null;
 					}
-				}
 
+				}
 				html.push("\t\t</tr>\n");
 				count++;
 			}
@@ -324,7 +341,7 @@ function serveTest(query, response)
 		if (count == 0)
 		{
 			html.push("\t\t<tr>\n");
-			html.push('\t\t<td colspan="4"><i>');
+			html.push('\t\t<td colspan="8"><i>');
 			html.push("(no input to test)");
 			html.push("</i></td>\n");
 			html.push("\t\t</tr>\n");
