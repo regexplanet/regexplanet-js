@@ -142,11 +142,11 @@ function serveTest(query, response)
 			{
 				if (kv[0] in params)
 				{
-					params[kv[0]].push(querystring.unescape(kv[1]));
+					params[kv[0]].push(querystring.unescape(kv[1].replace(/\+/g, " ")));
 				}
 				else
 				{
-					params[kv[0]] = [ querystring.unescape(kv[1]) ];
+					params[kv[0]] = [ querystring.unescape(kv[1].replace(/\+/g, " ")) ];
 				}
 			}
 			else
