@@ -5,10 +5,6 @@ var querystring = require('querystring');
 var util = require("util");
 var url = require("url");
 
-// Hack, but I don't want to make *any* changes to xregexp-all.js
-eval(fs.readFileSync('xregexp-all.js').toString());
-
-
 function h(unsafe)
 {
 	if (unsafe == null)
@@ -104,11 +100,6 @@ function serveTestPost(request, response)
     	});
 }
 
-function makeRegExp(use_xregexp, str_regex, str_options)
-{
-	return use_xregexp ? new XRegExp(str_regex, str_options) : new RegExp(str_regex, str_options)
-}
-
 function serveTest(query, response)
 {
 	response.writeHead(200, {
@@ -168,7 +159,6 @@ function serveTest(query, response)
 		var replacement = 'replacement' in params ? params['replacement'][0] : null;
 		var str_options = "";
 		var options = 'option' in params ? params['option'] : null;
-		var use_xregexp = 'engine' in params && params['engine'][0] == 'xregexp';
 		var global = false;
 		if (options != null && options.length > 0)
 		{
@@ -188,22 +178,6 @@ function serveTest(query, response)
 				else if (option == "ignorecase")
 				{
 					str_options += "i";
-				}
-				else if (use_xregexp && option == "dotall")
-				{
-					str_options += 's';
-				}
-				else if (use_xregexp && option == "comment")
-				{
-					str_options += 'x';
-				}
-				else if (use_xregexp && option == "explicitcapture")
-				{
-					str_options += 'n';
-				}
-				else if (use_xregexp && option == "sticky")
-				{
-					str_options += 'y';
 				}
 				else
 				{
@@ -240,14 +214,14 @@ function serveTest(query, response)
 
 		try
 		{
-			compileTest = makeRegExp(use_xregexp, str_regex, str_options);
+			compileTest = new RegExp(str_regex, str_options);
 		}
 		catch (err)
 		{
 			html.push('<div class="alert alert-error">Error: ');
 			html.push(h(err.message));
 			html.push("</div>");
-			response.write(JSON.stringify({"success": true, "message": "unable to create " + (use_xregexp ? "XRegExp" : "RegExp") + " object", "html": html.join("")}));
+			response.write(JSON.stringify({"success": true, "message": "unable to create RegExp object", "html": html.join("")}));
 			response.end();
 			return;
 		}
@@ -293,11 +267,11 @@ function serveTest(query, response)
 				html.push("</td>\n");
 
 				html.push('\t\t\t<td>');
-				html.push(h(input.replace(makeRegExp(use_xregexp, str_regex, str_options), replacement == null ? "" : replacement)));
+				html.push(h(input.replace(new RegExp(str_regex, str_options), replacement == null ? "" : replacement)));
 				html.push("</td>\n");
 
 				html.push('\t\t\t<td>');
-				var splits = input.split(makeRegExp(use_xregexp, str_regex, str_options));
+				var splits = input.split(new RegExp(str_regex, str_options));
 				for (var split = 0; split < splits.length; split++)
 				{
 					html.push("[");
@@ -309,10 +283,10 @@ function serveTest(query, response)
 				html.push("</td>\n");
 
 				html.push('\t\t\t<td>');
-				html.push(makeRegExp(use_xregexp, str_regex, str_options).test(input) ? "true" : "false");	// can't use the same object twice
+				html.push(new RegExp(str_regex, str_options).test(input) ? "true" : "false");	// can't use the same object twice
 				html.push("</td>\n");
 
-				var regex = makeRegExp(use_xregexp, str_regex, str_options);
+				var regex = new RegExp(str_regex, str_options);
 				var result = regex.exec(input);
 				if (result == null)
 				{
