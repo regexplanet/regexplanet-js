@@ -26,6 +26,7 @@ function getStatus()
 	var retVal = {}
 
 	retVal["success"] = true;
+	retVal["version"] = "node " + process.versions["node"] + " v8 " + process.versions["v8"];
 	retVal["__filename"] = __filename;
 	retVal["os.hostname"] = os.hostname();
 	retVal["os.type"] = os.type();
