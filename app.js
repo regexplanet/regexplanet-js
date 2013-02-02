@@ -26,7 +26,7 @@ function getStatus()
 	var retVal = {}
 
 	retVal["success"] = true;
-	retVal["version"] = "node " + process.versions["node"] + " v8 " + process.versions["v8"];
+	retVal["version"] = process.versions["v8"] + " (node.js " + process.versions["node"] + ")";
 	retVal["__filename"] = __filename;
 	retVal["os.hostname"] = os.hostname();
 	retVal["os.type"] = os.type();
@@ -47,6 +47,8 @@ function getStatus()
 	retVal["process.uptime"] = process.uptime;
 	retVal["process.version"] = process.versions;
 	retVal["process.versions"] = process.versions;
+	retVal["process.versions['v8']"] = process.versions["v8"];
+	retVal["process.versions['node']"] = process.versions["node"];
 	retVal["process.installPrefix"] = process.installPrefix;
 
 	return retVal;
