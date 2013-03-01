@@ -239,7 +239,6 @@ function serveTest(query, response)
 		html.push(h(str_options));
 		html.push("</td>\n");
 		html.push("\t</tr>\n");
-		html.push("</table>\n");
 
 		var compileTest = null;
 
@@ -249,13 +248,18 @@ function serveTest(query, response)
 		}
 		catch (err)
 		{
-			html.push('<div class="alert alert-error">Error: ');
+			html.push('\t<tr>\n');
+			html.push('\t\t<td>Error:</td>\n');
+			html.push('\t\t<td>');
 			html.push(h(err.message));
-			html.push("</div>");
-			response.write(JSON.stringify({"success": true, "message": "unable to create RegExp object", "html": html.join("")}));
+			html.push('</td>\n');
+			html.push('\t</tr>\n');
+			html.push('</table>\n');
+			response.write(JSON.stringify({"success": false, "message": "unable to create RegExp object", "html": html.join("")}));
 			response.end();
 			return;
 		}
+		html.push("</table>\n");
 
 		html.push('<table class=\"table table-bordered table-striped\">\n');
 
