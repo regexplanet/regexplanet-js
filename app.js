@@ -399,6 +399,8 @@ function serveTest(query, response)
 	response.end();
 }
 
+var port = Number(process.env.PORT || process.env.VCAP_APP_PORT || 5000);
+
 http.createServer(function (request, response)
 	{
 		var parsedUrl = url.parse(request.url);
@@ -437,7 +439,7 @@ http.createServer(function (request, response)
 			response.end();
 		}
 
-	}).listen(process.env.VCAP_APP_PORT || 8888);
+	}).listen(port);
 
-util.puts("Server running");
+util.puts("Server running on port " + port);
 
