@@ -1,5 +1,18 @@
 {
-	"name":"regexplanet",
+	"name":"regexplanet-js",
 	"version":"0.0.1",
-	"dependencies": {}
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.15.4"
+  },
+  "engines": {
+    "node": "8.1.4"
+  },
+  "repository": {
+    "url": "https://www.github.com/fileformat/regexplanet-js"
+  }
 }
+
