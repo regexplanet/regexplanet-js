@@ -44,7 +44,7 @@ function getStatus()
 	retVal["process.execPath"] = process.execPath;
 	retVal["process.memoryUsage"] = process.memoryUsage();
 	retVal["process.platform"] = process.platform;
-	retVal["process.uptime"] = process.uptime;
+	retVal["process.uptime"] = process.uptime();
 	retVal["process.version"] = process.versions;
 	retVal["process.versions"] = process.versions;
 	retVal["process.versions['v8']"] = process.versions["v8"];
@@ -441,5 +441,5 @@ http.createServer(function (request, response)
 
 	}).listen(port);
 
-util.puts("Server running on port " + port);
+console.info("INFO: Server running on port " + port);
 
