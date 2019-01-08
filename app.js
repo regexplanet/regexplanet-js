@@ -432,6 +432,10 @@ http.createServer(function (request, response)
 		{
 			serveFile(response, {"Content-Type": "image/x-icon"}, "favicon.ico");
 		}
+        else if (parsedUrl.pathname == '/favicon.svg')
+        {
+            serveFile(response, {"Content-Type": "image/svg+xml"}, "favicon.svg");
+        }
 		else if (parsedUrl.pathname == '/' || parsedUrl.pathname.lastIndexOf('/index.', 0) === 0 || parsedUrl.pathname.lastIndexOf('/default.', 0) === 0)
 		{
 			redirect(response, "http://www.regexplanet.com/advanced/javascript/index.html");
