@@ -27,6 +27,10 @@ function getStatus()
 
 	retVal["success"] = true;
 	retVal["version"] = process.versions["v8"] + " (node.js " + process.versions["node"] + ")";
+    retVal["timestamp"] = new Date().toISOString();
+    retVal["lastmod"] = process.env['LASTMOD'] || '(not set)';
+    retVal["commit"] = process.env['COMMIT'] || '(not set)';
+    retVal["tech"] = "NodeJS " + process.version;
 	retVal["__filename"] = __filename;
 	retVal["os.hostname"] = os.hostname();
 	retVal["os.type"] = os.type();
@@ -117,7 +121,7 @@ function serveStatus(query, response)
 			"Content-Type": "text/plain",
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'POST, GET',
-			'Access-Control-Max-Age': '604800',
+			'Access-Control-Max-Age': '604800'
 		});
 
 	var params = parseParams(query);

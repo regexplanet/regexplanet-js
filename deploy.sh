@@ -2,24 +2,13 @@
 #
 # deploy the js backend to Zeit
 #
-# https://zeit.co/docs/features/now-cli
 
-#
-# list existing instance
-#
-now list regexplanet-js
+set -o errexit
+set -o pipefail
+set -o nounset
 
-#
-# deploy new one
-#
-now --public && now alias
-
-#
-# move alias to new one
-#
-# now alias greek normal
-
-#
-# delete old one
-#
-#now rm 
+now \
+    --env COMMIT=$(git rev-parse --short HEAD) \
+    --env LASTMOD=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
+    && now alias \
+    && now rm $(cat ./now.json | jq '.name' --raw-output) --safe --yes
