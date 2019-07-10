@@ -1,14 +1,15 @@
 #!/bin/bash
 #
-# deploy the js backend to Zeit
+# deploy to gcloud
 #
 
-set -o errexit
-set -o pipefail
-set -o nounset
+cat app.yaml \
+    | jq --sort-keys ".env_variables.LASTMOD|=\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"|.env_variables.COMMIT|=\"$(git rev-parse --short HEAD)\"" \
+    | ex -sc 'wq!app.yaml' /dev/stdin
 
-now \
-    --env COMMIT=$(git rev-parse --short HEAD) \
-    --env LASTMOD=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-    && now alias \
-    && now rm $(cat ./now.json | jq '.name' --raw-output) --safe --yes
+gcloud config set project regexplanet-js
+gcloud app deploy
+
+cat app.yaml \
+    | jq 'del(.env_variables.LASTMOD)|del(.env_variables.COMMIT)' \
+    | ex -sc 'wq!app.yaml' /dev/stdin
