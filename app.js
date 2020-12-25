@@ -272,6 +272,7 @@ function serveTest(query, response)
 		html.push("\t\t\t<th style=\"text-align:center;\">Test</th>\n");
 		html.push("\t\t\t<th>Input</th>");
 		html.push("\t\t\t<th>input.replace()</th>");
+		html.push("\t\t\t<th>input.replaceAll()</th>");
 		html.push("\t\t\t<th>input.split()[]</th>");
 		html.push("\t\t\t<th>regex.test()</th>");
 		html.push("\t\t\t<th>regex.exec().index</th>");
@@ -307,6 +308,10 @@ function serveTest(query, response)
 
 				html.push('\t\t\t<td>');
 				html.push(h(input.replace(new RegExp(str_regex, str_options), replacement == null ? "" : replacement)));
+				html.push("</td>\n");
+
+				html.push('\t\t\t<td>');
+				html.push(h(input.replaceAll(new RegExp(str_regex, str_options), replacement == null ? "" : replacement)));
 				html.push("</td>\n");
 
 				html.push('\t\t\t<td>');
