@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "build": "true",
     "start": "node app.js"
   },
-  "dependencies": {
-    "express": "^4.16.0"
-  },
+  "dependencies": {},
   "engines": {
-    "node": "10"
+    "node": "14"
   },
   "repository": {
     "url": "https://www.github.com/fileformat/regexplanet-js"
