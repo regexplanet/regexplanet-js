@@ -1,4 +1,4 @@
-FROM node:14 as base
+FROM node:15 as base
 RUN groupadd -r appuser && \
 	useradd --create-home --gid appuser --home-dir /app --no-log-init --system appuser
 
